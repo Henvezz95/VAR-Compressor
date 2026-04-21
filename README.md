@@ -72,9 +72,9 @@ The repository provides several example configurations to demonstrate different 
 
 ### KV-Cache Calibration
 
-To generate the optimal Asymmetric Per-Channel INT8 quantization scales for the KV-cache, execute the `calibrate_cache_quantization` module. [cite_start]Unlike standard LLM cache quantization, our analysis of VAR models indicates that variance is predominantly channel-driven across both Keys and Values[cite: 6, 71, 135]. 
+To generate the optimal Asymmetric Per-Channel INT8 quantization scales for the KV-cache, execute the `calibrate_cache_quantization` module. Unlike standard LLM cache quantization, our analysis of VAR models indicates that variance is predominantly channel-driven across both Keys and Values. 
 
-[cite_start]The script employs a **Golden-Section Search** to optimize clipping bounds per channel, minimizing the reconstruction Mean Squared Error (MSE)[cite: 183, 184]. [cite_start]This deterministic strategy accommodates highly skewed distributions (peaking at 11.56 in the 2B Key Cache) without the control-flow overhead of dynamic token pruning[cite: 68, 138, 141].
+The script employs a **Golden-Section Search** to optimize clipping bounds per channel, minimizing the reconstruction Mean Squared Error (MSE). This deterministic strategy accommodates highly skewed distributions (peaking at 11.56 in the 2B Key Cache) without the control-flow overhead of dynamic token pruning.
 
 It requires the base model configuration and the calibration collection parameters:
 

@@ -102,6 +102,7 @@ The following command evaluates an Infinity 8B model on the **MJHQ** and **DCI**
 ```bash
 python -m evaluation.benchmark_assembled_model \
     configs/models/infinity-8b.yaml \
+    configs/svdquant/int4.yaml \
     --ref-root ./evaluation_output/infinity_fp16_8b \
     --gen-root ./evaluation_output/infinity_w4a4_kv8_8b \
     --base-path ./runs/diffusion/int4_rank32_8b/ \

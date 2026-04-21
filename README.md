@@ -72,13 +72,20 @@ The repository provides several example configurations to demonstrate different 
 
 ### KV-Cache Calibration
 
-To generate the optimal Asymmetric Per-Channel INT8 quantization scales for the KV-cache, execute the `calibrate_cache_quantization` module. This script utilizes a Golden-Section Search to optimize clipping bounds and minimize reconstruction MSE across the highly skewed channel distributions. 
+To generate the optimal Asymmetric Per-Channel INT8 quantization scales for the KV-cache, execute the `calibrate_cache_quantization` module. [cite_start]Unlike standard LLM cache quantization, our analysis of VAR models indicates that variance is predominantly channel-driven across both Keys and Values[cite: 6, 71, 135]. 
+
+[cite_start]The script employs a **Golden-Section Search** to optimize clipping bounds per channel, minimizing the reconstruction Mean Squared Error (MSE)[cite: 183, 184]. [cite_start]This deterministic strategy accommodates highly skewed distributions (peaking at 11.56 in the 2B Key Cache) without the control-flow overhead of dynamic token pruning[cite: 68, 138, 141].
 
 It requires the base model configuration and the calibration collection parameters:
 
 ```bash
 python -m deepcompressor.app.diffusion.calibrate_cache_quantization configs/models/infinity-8b.yaml configs/collect/qdiff.yaml
 ```
+
+**Key Implementation Details:**
+* **Asymmetric Mapping:** Uses affine quantization to align scaling factors with the axes of highest variance and shift zero-points to accommodate skewed dynamic ranges.
+* **Optimization:** Scans a logarithmic grid of percentiles before refining the optimal clipping bounds using a coarse-to-fine search.
+* **Output:** Generates the `scale` and `zero_point` parameters saved to `kv_scales/kv_quant_calib.pt`, which are required to run the full W4A4+KV8 inference pipeline.
 
 *(Note: This routine calculates the `scale` and `zero_point` parameters saved to `kv_scales/kv_quant_calib.pt`, which are subsequently required to run the full W4A4+KV8 inference pipeline).*
 

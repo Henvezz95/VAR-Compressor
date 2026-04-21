@@ -70,6 +70,18 @@ The repository provides several example configurations to demonstrate different 
     * `configs/models/infinity-2b-smoothquant.yaml`: Enables activation smoothing to mitigate outliers without utilizing the low-rank branch for weights.
     * `configs/models/infinity-2b-naive.yaml`: Performs standard block-wise quantization (e.g., 64-group) on the weights. This is useful as a baseline but may cause degradation, especially in the 2B model.
 
+### KV-Cache Calibration
+
+To generate the optimal Asymmetric Per-Channel INT8 quantization scales for the KV-cache, execute the `calibrate_cache_quantization` module. This script utilizes a Golden-Section Search to optimize clipping bounds and minimize reconstruction MSE across the highly skewed channel distributions. 
+
+It requires the base model configuration and the calibration collection parameters:
+
+```bash
+python -m deepcompressor.app.diffusion.calibrate_cache_quantization configs/models/infinity-8b.yaml configs/collect/qdiff.yaml
+```
+
+*(Note: This routine calculates the `scale` and `zero_point` parameters saved to `kv_scales/kv_quant_calib.pt`, which are subsequently required to run the full W4A4+KV8 inference pipeline).*
+
 ## Infinity VAR: 8B Bitwise Autoregressive Image Generation on Edge GPUs
 
 Visual Autoregressive models achieve state-of-the-art fidelity, but the monotonically growing KV-cache introduces a severe Memory Wall, confining these systems to data-center infrastructure. This fork provides a specialized compression pipeline to break that wall.

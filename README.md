@@ -8,21 +8,21 @@
     </a>
 </p>
 
-## About This Fork
+# About This Fork
 
 This repository is a specialized fork of the DeepCompressor framework, tailored specifically to democratize high-fidelity Visual Autoregressive (VAR) models for edge deployment. 
 
 * **What this fork adds:** We introduce a comprehensive W4A4 and INT8 KV-cache quantization pipeline specifically designed for the **Infinity** family of generative models (2B and 8B). It mitigates extreme activation outliers using SVDQuant and compresses the monotonically growing KV-cache via Asymmetric Per-Channel INT8 Quantization. This allows the 8B model to run natively on 16GB edge silicon.
 * **Paper:** For full methodological details, evaluation metrics, and edge hardware deployment strategies on NVIDIA Jetson architectures, please refer to our paper: [*Enabling 8B Bitwise Autoregressive Image Generation on Edge GPUs*](https://iris.unimore.it/handle/11380/1400428) (Available Soon).
 
-## Acknowledgements & Upstream Projects
+# Acknowledgements & Upstream Projects
 
 This work builds upon exceptional foundational research. For additional insights, upstream features, and the original codebases, please refer to the following projects:
 
 * **SVDQuant & DeepCompressor:** The foundational quantization engine used in this fork. SVDQuant absorbs outliers by shifting them from activations to weights, then employing a high-precision low-rank branch with Singular Value Decomposition (SVD). For the original implementation, additional diffusion model support, and LLM quantization (QServe), visit the [MIT HAN Lab DeepCompressor repository](https://github.com/mit-han-lab/deepcompressor) and read the [SVDQuant paper](http://arxiv.org/abs/2411.05007).
 * **Infinity VAR:** The target architecture of this fork. Infinity is a Bitwise Visual AutoRegressive Modeling framework capable of generating high-resolution, photorealistic images by predicting bitwise tokens across scales. It refactors visual generation with an infinite-vocabulary classifier and bitwise self-correction. For core model insights, visit the [Infinity Project Page & GitHub](https://foundationvision.github.io/infinity.project/) and read the [Infinity paper](https://arxiv.org/abs/2412.04431).
 
-## Installation
+# Installation
 
 ### Install from Source
 
@@ -38,7 +38,8 @@ pip install -e .
 cd Infinity
 pip install -r requirements.txt
 ```
-## Usage
+
+# Usage
 
 To quantize the Infinity models, execute the `ptq_infinity.py` script. The framework relies on a strict configuration hierarchy. You must pass the YAML files as positional arguments to construct the pipeline: defining the model, setting the calibration parameters, and dictating the specific quantization math.
 

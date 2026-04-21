@@ -43,6 +43,31 @@ pip install -r requirements.txt
 
 To quantize the Infinity models, execute the `ptq_infinity.py` script. The framework relies on a strict configuration hierarchy. You must pass the YAML files as positional arguments to construct the pipeline: defining the model, setting the calibration parameters, and dictating the specific quantization math.
 
+# 0. Technical Motivation: Diagnostic Profiling
+
+The quantization strategies implemented in this repository are driven by a deep structural analysis of the Infinity VAR architecture. Unlike standard LLMs, Visual Autoregressive models exhibit unique activation patterns that necessitate specialized treatment.
+
+To reproduce our diagnostic findings, use the profiling suite:
+```bash
+python -m evaluation.activations_measurements configs/models/infinity-8b.yaml configs/collect/qdiff.yaml
+```
+
+### The Outlier Problem (Linear Layers)
+Through our profiling, we identified extreme activation outliers in the **FFN down-projections**, with Kurtosis values significantly exceeding Gaussian distributions.
+
+* **Max-to-Median Ratio**: Reaches up to **353x** in the 8B model.
+* **Implication**: Standard Min-Max quantization would lead to massive precision loss; this justifies our use of **SVDQuant** to decouple these outliers into a high-precision low-rank branch.
+
+### KV-Cache Variance (Self-Attention)
+Analysis of the monotonically growing KV-cache reveals that variance is not uniform across dimensions.
+
+| Metric | Measured Value (8B) | Technical Requirement |
+| :--- | :--- | :--- |
+| **$CV_{channel}$** | > 1.2 | **Per-Channel Scaling**: Variance is driven by specific channels rather than tokens. |
+| **Skewness** | ~0.85 (Key Cache) | **Asymmetric Mapping**: Distributions are highly skewed, requiring non-centered zero-points. |
+
+By running the diagnostic script, users can verify that these structural characteristics are consistent across both 2B and 8B variants, validating the selection of **Asymmetric Per-Channel INT8** for the cache pipeline.
+
 ## 1. Running Quantization
 
 The following command executes the baseline quantization pipeline for the Infinity 8B model, utilizing the specific calibration settings defined in `qdiff.yaml` and running the complete **INT4 SVDQuant** pipeline (incorporating both activation smoothing and low-rank weight branches):

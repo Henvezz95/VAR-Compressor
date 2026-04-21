@@ -42,7 +42,7 @@ pip install -r requirements.txt
 
 To quantize the Infinity models, execute the `ptq_infinity.py` script. The framework relies on a strict configuration hierarchy. You must pass the YAML files as positional arguments to construct the pipeline: defining the model, setting the calibration parameters, and dictating the specific quantization math.
 
-### 1. Running Quantization
+## 1. Running Quantization
 
 The following command executes the baseline quantization pipeline for the Infinity 8B model, utilizing the specific calibration settings defined in `qdiff.yaml` and running the complete **INT4 SVDQuant** pipeline (incorporating both activation smoothing and low-rank weight branches):
 

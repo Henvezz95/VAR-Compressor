@@ -1,12 +1,11 @@
 <div align="center">
 
-<h1><code><b>[ Infinity-VAR : DeepCompressor ]</b></code></h1>
+<h3><code><b>[ Infinity-VAR : DeepCompressor ]</b></code></h3>
 
-<h2><i>8B Bitwise Autoregressive Generation on Edge GPUs</i></h2>
+<p><b><i>8B Bitwise Autoregressive Generation on Edge GPUs</i></b></p>
 
 [![Apache License](https://img.shields.io/github/license/mit-han-lab/deepcompressor)](https://github.com/mit-han-lab/deepcompressor/blob/master/LICENSE)
 
-<hr>
 </div>
 
 ## About This Fork

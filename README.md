@@ -39,7 +39,7 @@ cd Infinity_rep
 pip install -r requirements.txt
 ```
 
-# 0. Technical Motivation: Diagnostic Profiling
+# 1. Technical Motivation: Diagnostic Profiling
 
 The quantization strategies implemented in this repository are driven by a deep structural analysis of the Infinity VAR architecture. Unlike standard LLMs, Visual Autoregressive models exhibit unique activation patterns that necessitate specialized treatment.
 
@@ -49,6 +49,8 @@ python -m evaluation.activations_measurements configs/models/infinity-8b.yaml co
 ```
 
 ### The Outlier Problem (Linear Layers)
+<img src='./assets/metric_analysis.jpg'>
+
 Through our profiling, we identified extreme activation outliers in the **FFN down-projections**, with Kurtosis values significantly exceeding Gaussian distributions.
 
 * **Max-to-Median Ratio**: Reaches up to **353x** in the 8B model.
@@ -64,7 +66,7 @@ Analysis of the monotonically growing KV-cache reveals that variance is not unif
 
 By running the diagnostic script, users can verify that these structural characteristics are consistent across both 2B and 8B variants, validating the selection of **Asymmetric Per-Channel INT8** for the cache pipeline.
 
-## 1. Running Quantization
+# 2. Running Quantization
 
 The following command executes the baseline quantization pipeline for the Infinity 8B model, utilizing the specific calibration settings defined in `qdiff.yaml` and running the complete **INT4 SVDQuant** pipeline (incorporating both activation smoothing and low-rank weight branches):
 
@@ -92,7 +94,7 @@ The repository provides several example configurations to demonstrate different 
     * `configs/models/infinity-2b-smoothquant.yaml`: Enables activation smoothing to mitigate outliers without utilizing the low-rank branch for weights.
     * `configs/models/infinity-2b-naive.yaml`: Performs standard block-wise quantization (e.g., 64-group) on the weights. This is useful as a baseline but may cause degradation, especially in the 2B model.
 
-## 2. KV-Cache Calibration
+# 3. KV-Cache Calibration
 
 To generate the optimal Asymmetric Per-Channel INT8 quantization scales for the KV-cache, execute the `calibrate_cache_quantization` module. Unlike standard LLM cache quantization, our analysis of VAR models indicates that variance is predominantly channel-driven across both Keys and Values. 
 
@@ -111,7 +113,7 @@ python -m deepcompressor.app.diffusion.calibrate_cache_quantization configs/mode
 
 *(Note: This routine calculates the `scale` and `zero_point` parameters saved to `kv_scales/kv_quant_calib.pt`, which are subsequently required to run the full W4A4+KV8 inference pipeline).*
 
-## 3. Quality Evaluation (Fake-Quantization)
+# 4. Quality Evaluation (Fake-Quantization)
 
 To assess the generative fidelity (FID, ImageReward, CLIP-IQA) before deploying to edge hardware, the `benchmark_assembled_model.py` script provides a bit-accurate simulation of the quantization noise. By using **fake-quantization**, the framework applies low-bit logic (e.g., INT4 or INT8) to the model weights and activations while performing the underlying computation in `bfloat16`.
 
@@ -149,7 +151,7 @@ python -m evaluation.benchmark_assembled_model \
 
 **Note on Artifacts:** The script automatically looks for cache scales in `runs/kv_scales/kv_quant_calib.pt`. Ensure you have run the `calibrate_cache_quantization` script before enabling the `--enable_kv_quant` flag.
 
-## 4. Performance & Memory Benchmarking (Real Quantization)
+# 5. Performance & Memory Benchmarking (Real Quantization)
 
 To measure the actual memory savings and inference speed on edge hardware (e.g., NVIDIA Jetson), use the `infinity_w4a4_test.py` script. Unlike the quality evaluation script, this routine swaps standard layers for real **SVDQuantLinear** modules and executes optimized low-bit kernels.
 

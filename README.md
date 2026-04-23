@@ -92,7 +92,7 @@ The repository provides several example configurations to demonstrate different 
     * `configs/models/infinity-8b.yaml`: Defines the pipeline architecture, precision (W4A4 + SVDQuant LoRA), and paths for the 8B model.
     * `configs/models/infinity-2b.yaml`: Defines the pipeline architecture, precision (W4A4 + SVDQuant LoRA), and paths for the 2B model.
 
-* **Quantization Strategies:**
+* **Other Quantization Strategies (Ablation Studies):**
     * `configs/models/infinity-2b-smoothquant.yaml`: Enables activation smoothing to mitigate outliers without utilizing the low-rank branch for weights.
     * `configs/models/infinity-2b-naive.yaml`: Performs standard block-wise quantization (e.g., 64-group) on the weights. This is useful as a baseline but may cause degradation, especially in the 2B model.
 

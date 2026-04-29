@@ -40,8 +40,9 @@ pip install -e .
 cd Infinity_rep
 pip install -r requirements.txt
 ```
+The quantized INT4 weights *model.pt*, SVD low-rank branches *branch.pt*, and activation smoothing scales *smooth.pt* can be downloaded from [here](https://unimore365-my.sharepoint.com/:f:/g/personal/319554_unimore_it/IgBeCH6S5IiVRaGHdWUDq22gAXkwSix9MjWuz4PuJHo9ItI?e=ugEJeF) and extracted into the *./runs/diffusion/* directory.
 
-The compressed models used in the original paper can be downloaded from [here](https://unimore365-my.sharepoint.com/:f:/g/personal/319554_unimore_it/IgBeCH6S5IiVRaGHdWUDq22gAXkwSix9MjWuz4PuJHo9ItI?e=ugEJeF).
+To prevent reproducibility failures caused by upstream model retraining or silent checkpoint updates, we provide a frozen snapshot of the exact original [Infinity weights](https://1drv.ms/f/c/05acfe010cc29b11/IgB5yhBXjNp4QLendTyhkAl2AZRcQE_t9JwSpLYMAxbKKkI?e=4cVTKH) used in our experiments. These must be downloaded from our repository links and placed strictly inside the *Infinity_rep/weights/* directory.
 
 # 1. Technical Motivation: Diagnostic Profiling
 

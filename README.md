@@ -26,6 +26,27 @@ This work builds upon exceptional foundational research. For additional insights
 
 # Installation
 
+### Docker Environment (Only if Testing on Nvidia Jetson Orin)
+
+To ensure a reproducible software environment on ARM64 architectures and avoid host dependency conflicts, we provide a Docker-based deployment strategy utilizing a JetPack 6-compatible PyTorch image. The `Dockerfile` is located in the root of the repository.
+
+**1. Build the Docker Image:**
+To prevent file permission issues when the container writes evaluation outputs to your host machine, pass your host user and group IDs during the build:
+```bash
+docker build \
+  --build-arg USER_ID=$(id -u) \
+  --build-arg GROUP_ID=$(id -g) \
+  -t var-compressor .
+
+**2. Run the Container:**
+docker run -it --rm \
+  --runtime nvidia \
+  --network host \
+  -v ${PWD}:/workspace \
+  var-compressor
+
+*Note: Once inside the container, you can proceed with the dependency installation steps described below.*
+
 ### Install from Source
 
 1. Clone this repository and navigate to the folder:

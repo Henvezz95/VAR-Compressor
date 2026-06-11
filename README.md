@@ -37,13 +37,16 @@ docker build \
   --build-arg USER_ID=$(id -u) \
   --build-arg GROUP_ID=$(id -g) \
   -t var-compressor .
+```
 
 **2. Run the Container:**
+```bash
 docker run -it --rm \
   --runtime nvidia \
   --network host \
   -v ${PWD}:/workspace \
   var-compressor
+```
 
 *Note: Once inside the container, you can proceed with the dependency installation steps described below.*
 
